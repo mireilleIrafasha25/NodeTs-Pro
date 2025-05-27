@@ -113,7 +113,7 @@ export const ForgotPassword = asyncWrapper(async (req: Request, res: Response, n
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '15m' });
 
     await tokenRepo.save(tokenRepo.create({ token, user, expirationDate: new Date(Date.now() + 5 * 60 * 1000) }));
-    const resetLink = `http://localhost:4000/reset-password?token=${token}&id=${user.id}`;
+    const resetLink = `http://localhost:4000/resetPassword/${token}/${user.id}`;
 
     await sendEmail({recipient:user.email, 
         subject:'Reset your password', 
@@ -124,28 +124,41 @@ export const ForgotPassword = asyncWrapper(async (req: Request, res: Response, n
 export const ResetPassword = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
-    if (req.body.password !== req.body.confirmPassword) return next(new BadRequestError('Passwords do not match'));
+    if (req.body.password !== req.body.confirmPassword)
+        return next(new BadRequestError('Passwords do not match'));
 
-    const decoded = jwt.verify(req.body.token, process.env.JWT_SECRET_KEY!) as { id: string };
+    let decoded;
+    try {
+        decoded = jwt.verify(req.params.token, process.env.JWT_SECRET_KEY!) as { id: string };
+    } catch (err: any) {
+        if (err.name === 'TokenExpiredError') {
+            return next(new BadRequestError('Reset token has expired'));
+        } else {
+            return next(new BadRequestError('Invalid reset token'));
+        }
+    }
+
     const tokenRepo = AppDataSource.getRepository(Token);
-    const storedToken = await tokenRepo.findOneBy({ token: req.body.token });
+    const storedToken = await tokenRepo.findOne({where: { token: req.params.token },relations: ['user'],});
 
-    if (!decoded || !storedToken || decoded.id !== req.body.id || storedToken.user.id !== req.body.id)
+
+    if (!decoded || !storedToken || decoded.id !== req.params.id || storedToken.user.id !== req.params.id)
         return next(new BadRequestError('Invalid or expired token'));
 
-    if (storedToken.expirationDate.getTime() < Date.now()) return next(new BadRequestError('Token expired'));
+    if (storedToken.expirationDate.getTime() < Date.now())
+        return next(new BadRequestError('Token expired'));
 
     const userRepo = AppDataSource.getRepository(User);
-    const id= req.params.id ;
-    const user = await userRepo.findOneBy({ id});
+    const user = await userRepo.findOneBy({ id: req.params.id });
     if (!user) return next(new BadRequestError('User not found'));
 
     user.password = await bcrypt.hash(req.body.password, 10);
-    await tokenRepo.delete({ token: req.body.token });
+    await tokenRepo.delete({ token: req.params.token });
     await userRepo.save(user);
 
     res.status(200).json({ message: 'Password has been reset' });
 });
+
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;

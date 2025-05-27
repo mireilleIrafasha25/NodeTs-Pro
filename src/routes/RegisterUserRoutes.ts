@@ -56,7 +56,7 @@ export const UserRouter=[
     },
     {
         method:"post",
-        route:"/resetPassword/:id",
+        route:"/resetPassword/:token/:id",
         controller:ResetPassword,
         action:"ResetPassword",
     },
