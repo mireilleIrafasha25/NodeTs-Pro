@@ -113,7 +113,7 @@ export const ForgotPassword = asyncWrapper(async (req: Request, res: Response, n
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '15m' });
 
     await tokenRepo.save(tokenRepo.create({ token, user, expirationDate: new Date(Date.now() + 5 * 60 * 1000) }));
-    const resetLink = `https://localhost:8080/reset-password?token=${token}&id=${user.id}`;
+    const resetLink = `http://localhost:4000/reset-password?token=${token}&id=${user.id}`;
 
     await sendEmail({recipient:user.email, 
         subject:'Reset your password', 
@@ -136,7 +136,8 @@ export const ResetPassword = asyncWrapper(async (req: Request, res: Response, ne
     if (storedToken.expirationDate.getTime() < Date.now()) return next(new BadRequestError('Token expired'));
 
     const userRepo = AppDataSource.getRepository(User);
-    const user = await userRepo.findOneBy({ id: req.body.id });
+    const id= req.params.id ;
+    const user = await userRepo.findOneBy({ id});
     if (!user) return next(new BadRequestError('User not found'));
 
     user.password = await bcrypt.hash(req.body.password, 10);

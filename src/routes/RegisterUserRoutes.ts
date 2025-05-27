@@ -47,5 +47,17 @@ export const UserRouter=[
         controller:deleteUser,
         action:"deleteUser",
          middlewares: [authenticateToken, authorize("admin")]
-    }
+    },
+    {
+        method:"post",
+        route:"/forgotPassword",
+        controller:ForgotPassword,
+        action:"ForgotPassword",
+    },
+    {
+        method:"post",
+        route:"/resetPassword/:id",
+        controller:ResetPassword,
+        action:"ResetPassword",
+    },
 ]
