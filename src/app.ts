@@ -7,7 +7,6 @@ import { UserRouter } from "./routes/RegisterUserRoutes";
 import * as bodyParser from "body-parser";
 
 dotenv.config();
-
 AppDataSource.initialize()
   .then(() => {
         console.log("Successfully connected to the database");
