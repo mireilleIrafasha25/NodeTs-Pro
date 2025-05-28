@@ -1,24 +1,33 @@
 
 import {SignIn,SignUp,Validateopt,ResetPassword,ForgotPassword,getAllusers,Logout,updateUser,deleteUser,findUserByName,test,findUserById } from "../controller/UserController";
-import {authenticateToken,authorize} from "../middleware/authenthicateToken"
+import {authenticateToken,authorize} from "../middleware/authenthicateToken";
+import {validate} from "../middleware/validation.middleware";
+import {signupSchema,verifyEmailSchema,
+    loginSchema,forgotPasswordSchema,
+    resetPasswordSchema
+} from "../schemas/auth.schemas"
+import { updateUserSchema } from "../schemas/userschema";
 export const UserRouter=[
     {
         method:"post",
         route:"/signup",
         controller:SignUp,
-        action:"SignUp"
+        action:"SignUp",
+        middlewares:[validate(signupSchema)]
     },
     {
         method:"post",
         route:"/login",
         controller:SignIn,
-        action:"SignIn"
+        action:"SignIn",
+        middlewares:[validate(loginSchema)]
     },
        {
         method:"get",
         route:"/listAll",
         controller:getAllusers,
-        action:"AllUsers"
+        action:"AllUsers",
+        
     },
       {
    method:"get",
@@ -31,14 +40,14 @@ export const UserRouter=[
    method:"post",
    route:"/ValidateUser",
    controller:Validateopt,
-   action:"FindUser"
+   middlewares:[validate(verifyEmailSchema)]
     },
     {
         method:"put",
         route:"/updateUser/:id",
         controller:updateUser,
         action:"updateUser",
-         middlewares: [authenticateToken], // all logged-in user can update
+        middlewares:[validate(updateUserSchema)]
 
     },
     {
@@ -52,12 +61,14 @@ export const UserRouter=[
         method:"post",
         route:"/forgotPassword",
         controller:ForgotPassword,
+        middlewares:[validate(forgotPasswordSchema)],
         action:"ForgotPassword",
     },
     {
         method:"post",
         route:"/resetPassword/:token/:id",
         controller:ResetPassword,
+        middlewares:[validate(resetPasswordSchema)],
         action:"ResetPassword",
     },
 ]

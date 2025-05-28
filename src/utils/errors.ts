@@ -11,7 +11,11 @@ class AppError extends Error{
     }
 }
 
-class ValidationError extends AppError
-{
-    
-}
+ export class ValidationError extends AppError {
+    public errors: Record<string, string[]>;
+  
+    constructor(errors: Record<string, string[]>, message = 'Validation failed') {
+      super(message, 400,true);
+      this.errors = errors;
+    }
+  }

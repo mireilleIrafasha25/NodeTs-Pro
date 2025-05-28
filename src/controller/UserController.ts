@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, } from 'express';
+import { Request, Response, NextFunction, RequestHandler, } from 'express';
 import { ILike } from 'typeorm';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
@@ -14,13 +14,17 @@ import { Token } from '../entity/Token';
 import {SignupInput,LoginInput,ResetPasswordInput,ForgotPasswordInput} from "../schemas/auth.schemas"
 import {UpdateUserInput,searchUsersSchema,getUserByIdSchema} from "../schemas/userschema"
 import {AuthenticatedRequest,ApiResponse} from "../types/common.types"
+import { email } from 'zod/v4';
 dotenv.config();
 
 export const test = (req: Request, res: Response) => {
     res.status(200).json({ message: 'Welcome to User Management ' });
 };
 
-export const SignUp = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+export const SignUp = asyncWrapper(async (
+    req: AuthenticatedRequest&SignupInput, 
+    res: Response<ApiResponse>,
+     next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
@@ -57,9 +61,22 @@ await sendEmail({
 // generate token
  const token = jwt.sign({ id: savedUser.id, role: savedUser.role, email: savedUser.email }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
 
-    res.status(201).json({ message: 'User account created!', user: savedUser, token });
-});
+    res.status(201).json({ 
+        success:true,
+        message: 'User account created!', 
+        data: {
+        user:{
+            id:savedUser.id,
+            name:savedUser.name,
+            email:savedUser.email,
+            role:newUser.role
+        },
+        token:token
+    }
+    });
+}) as RequestHandler;
 
+ // verify email
 export const Validateopt = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
