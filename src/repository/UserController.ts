@@ -11,7 +11,6 @@ import { BadRequestError, UnauthorizedError } from '../error';
 import { AppDataSource } from '../config/database';
 import { User } from '../entity/userEntity';
 import { Token } from '../entity/Token';
-import { Subject } from 'typeorm/persistence/Subject.js';
 
 dotenv.config();
 
