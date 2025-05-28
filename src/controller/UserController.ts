@@ -11,7 +11,9 @@ import { BadRequestError, UnauthorizedError } from '../error';
 import { AppDataSource } from '../config/database';
 import { User } from '../entity/userEntity';
 import { Token } from '../entity/Token';
-
+import {SignupInput,LoginInput,ResetPasswordInput,ForgotPasswordInput} from "../schemas/auth.schemas"
+import {UpdateUserInput,searchUsersSchema,getUserByIdSchema} from "../schemas/userschema"
+import {AuthenticatedRequest,ApiResponse} from "../types/common.types"
 dotenv.config();
 
 export const test = (req: Request, res: Response) => {

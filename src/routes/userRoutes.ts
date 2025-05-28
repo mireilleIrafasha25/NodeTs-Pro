@@ -1,5 +1,5 @@
 
-import { UserController } from "../repository/userRepository";
+import { UserController } from "../controller/userRepository";
 export const UserRouter=[
     {
         method:"post",

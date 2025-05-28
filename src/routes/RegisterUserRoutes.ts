@@ -1,5 +1,5 @@
 
-import {SignIn,SignUp,Validateopt,ResetPassword,ForgotPassword,getAllusers,Logout,updateUser,deleteUser,findUserByName,test,findUserById } from "../repository/UserController";
+import {SignIn,SignUp,Validateopt,ResetPassword,ForgotPassword,getAllusers,Logout,updateUser,deleteUser,findUserByName,test,findUserById } from "../controller/UserController";
 import {authenticateToken,authorize} from "../middleware/authenthicateToken"
 export const UserRouter=[
     {
