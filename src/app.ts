@@ -3,7 +3,7 @@ import express, { Express } from 'express';
 import * as dotenv from 'dotenv';
 import authRoutes from './routes/authRoute';
 import { InitializeDatabase } from './config/database';
-import {errorHandler} from './middleware/errorhandler';
+import {errorHandler} from "./middleware/errorhandler"
 
 dotenv.config();
 

@@ -11,7 +11,7 @@ import { BadRequestError, UnauthorizedError } from '../error';
 import { AppDataSource } from '../config/database';
 import { User } from '../entity/userEntity';
 import { Token } from '../entity/Token';
-import {SignupInput,LoginInput,ResetPasswordInput,ForgotPasswordInput} from "../schemas/auth.schemas"
+import {SignupInput,LoginInput,ResetPasswordInput,ForgotPasswordInput,ResetPasswordBody,ResetPasswordParams} from "../schemas/auth.schemas"
 import {UpdateUserInput,searchUsersSchema,getUserByIdSchema} from "../schemas/userschema"
 import {AuthenticatedRequest,ApiResponse} from "../types/common.types"
 import { email } from 'zod/v4';
@@ -92,10 +92,13 @@ export const Validateopt = asyncWrapper(async (req: Request, res: Response, next
 
     const token = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
 
-    res.status(200).json({ message: 'User account verified!', user, token });
+    res.status(200).json({ message: 'User account verified!', });
 });
 
-export const SignIn = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+export const SignIn = asyncWrapper(async (
+    req: AuthenticatedRequest&LoginInput,
+     res: Response<ApiResponse>, 
+     next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
@@ -107,10 +110,20 @@ export const SignIn = asyncWrapper(async (req: Request, res: Response, next: Nex
     if (!isPasswordValid) return next(new BadRequestError('Invalid password'));
 
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Login successful', user, token });
+    res.status(200).json({ success:true,message: 'Login successful',     
+        data: {
+        user:{
+            id:user.id,
+            name:user.name,
+            email:user.email,
+            role:user.role
+        },
+        token:token
+    }});
 });
 
-export const getAllusers = asyncWrapper(async (_req: Request, res: Response) => {
+export const getAllusers = asyncWrapper(async (
+    _req: Request, res: Response) => {
     const users = await AppDataSource.getRepository(User).find();
     res.status(200).json({ size: users.length, users });
 });
@@ -119,7 +132,10 @@ export const Logout = asyncWrapper(async (_req: Request, res: Response) => {
     res.status(200).json({ message: 'Logout successful' }); // Token clearing depends on frontend/local storage
 });
 
-export const ForgotPassword = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+export const ForgotPassword = asyncWrapper(async (   
+    req: AuthenticatedRequest&ForgotPasswordInput,
+     res: Response<ApiResponse>, 
+      next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
@@ -131,18 +147,26 @@ export const ForgotPassword = asyncWrapper(async (req: Request, res: Response, n
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '15m' });
 
     await tokenRepo.save(tokenRepo.create({ token, user, expirationDate: new Date(Date.now() + 5 * 60 * 1000) }));
-    const resetLink = `http://localhost:4000/resetPassword/${token}/${user.id}`;
+    const resetLink = `http://localhost:4000/user/resetPassword/${token}/${user.id}`;
 
     await sendEmail({recipient:user.email, 
         subject:'Reset your password', 
         body:`Click the link: ${resetLink}`});
-    res.status(200).json({ message: 'Reset password link sent to your email' });
+    res.status(200).json({ success:true,
+        message: 'Reset password link sent to your email' });
 });
 
-export const ResetPassword = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+export const ResetPassword = asyncWrapper(async (
+      req: Request<any,ApiResponse,ResetPasswordBody>,
+      res: Response<ApiResponse>, 
+      next: NextFunction) => 
+        
+        {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
-    if (req.body.password !== req.body.confirmPassword)
+
+    const { password, confirmPassword } = req.body;
+         if (password !== confirmPassword)
         return next(new BadRequestError('Passwords do not match'));
 
     let decoded;
@@ -174,7 +198,9 @@ export const ResetPassword = asyncWrapper(async (req: Request, res: Response, ne
     await tokenRepo.delete({ token: req.params.token });
     await userRepo.save(user);
 
-    res.status(200).json({ message: 'Password has been reset' });
+    res.status(200).json({
+        success:true,
+        message: 'Password has been reset' });
 });
 
 
