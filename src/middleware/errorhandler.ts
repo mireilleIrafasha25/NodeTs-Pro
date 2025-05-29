@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ValidationError } from '../utils/errors'; // Update path as needed
+import { ValidationError } from '../utils/errors'; 
 import { AppError } from '../utils/errors';
 
 export const errorHandler = (
