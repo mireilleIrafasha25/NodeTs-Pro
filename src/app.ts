@@ -1,50 +1,40 @@
-// src/app.ts
-import "reflect-metadata";
-import express, { Express, Request, Response, NextFunction } from "express";
-import * as dotenv from "dotenv";
-import { AppDataSource } from "./config/database";
-import { UserRouter } from "./routes/RegisterUserRoutes";
-import * as bodyParser from "body-parser";
+import 'reflect-metadata';
+import express, { Express } from 'express';
+import * as dotenv from 'dotenv';
+import authRoutes from './routes/authRoute';
+import { InitializeDatabase } from './config/database';
+import {errorHandler} from './middleware/errorhandler';
 
 dotenv.config();
-AppDataSource.initialize()
-  .then(() => {
-        console.log("Successfully connected to the database");
-    const app: Express = express();
 
-    app.use(bodyParser.json());
-    app.use(express.json());
+const app: Express = express();
+const PORT=process.env.PORT;
 
-    // Route setup
-    UserRouter.forEach(route => {
-      const method = route.method.toLowerCase();
-      const middlewares = route.middlewares || [];
-      // Validate the HTTP method
-      if (typeof (app as any)[method] !== "function") {
-        throw new Error(`Invalid HTTP method: ${route.method}`);
-      }
+//Middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-      // Register the route
-     (app as any)[method](
-  route.route,
-  ...middlewares,
-  async (req: Request, res: Response, next: NextFunction) => {
+// Routes
+app.use('/user', authRoutes);
+
+// Error handling middleware
+app.use(errorHandler);
+
+// Start the server
+const startServer = async () => {
     try {
-      // Directly call the controller function
-      await route.controller(req, res, next);
+      // Initialize db connection
+      await InitializeDatabase();
+      
+      // Start Express server
+      app.listen(PORT, () => {
+        console.log(` Server running on http://127.0.0.1:${PORT}`);
+      });
     } catch (error) {
-      next(error);
+      console.error('Failed to start server:', error);
+      process.exit(1);
     }
-  }
-);
-
-    });
-
-    const PORT = process.env.PORT;
-    app.listen(PORT, () => {
-      console.log(`Server running at http://127.0.0.1:${PORT}`);
-    });
-  })
-  .catch(error => {
-    console.error(" Data source initialization failed:", error);
-  });
+  };
+  
+  // Run the server
+  startServer();

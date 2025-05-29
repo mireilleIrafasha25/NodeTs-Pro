@@ -17,7 +17,7 @@ export const validate = (schema: z.ZodSchema) => {
               const errors: Record<string, string[]> = {};
               
               error.errors.forEach((err) => {
-                const path = err.path.slice(1).join('.');
+             const path = err.path.length > 1 ? err.path.slice(1).join('.') : err.path.join('.');
                 if (!errors[path]) {
                   errors[path] = [];
                 }

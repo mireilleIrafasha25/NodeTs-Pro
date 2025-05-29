@@ -27,5 +27,6 @@ export const InitializeDatabase = async():Promise<void>=>
     catch(error)
     {
         console.error("Error connecting to database",error)
+        throw error;
     }
 }
