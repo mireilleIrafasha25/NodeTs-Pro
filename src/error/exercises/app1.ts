@@ -2,8 +2,8 @@
 import "reflect-metadata";
 import express, { Express, Request, Response, NextFunction } from "express";
 import * as dotenv from "dotenv";
-import { AppDataSource } from "./config/database";
-import { UserRouter } from "./routes/RegisterUserRoutes";
+import { AppDataSource } from "../../config/database";
+import { UserRouter } from "./RegisterUserRoutes";
 import * as bodyParser from "body-parser";
 
 dotenv.config();

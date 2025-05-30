@@ -1,12 +1,12 @@
 
-import {SignIn,SignUp,Validateopt,ResetPassword,ForgotPassword,getAllusers,Logout,updateUser,deleteUser,findUserByName,test,findUserById } from "../controller/UserController";
-import {authenticateToken,authorize} from "../middleware/authenthicateToken";
-import {validate} from "../middleware/validation.middleware";
+import {SignIn,SignUp,Validateopt,ResetPassword,ForgotPassword,getAllusers,Logout,updateUser,deleteUser,findUserByName,test,findUserById } from "../../controller/UserController";
+import {authenticateToken,authorize} from "../../middleware/authenthicateToken";
+import {validate} from "../../middleware/validation.middleware";
 import {signupSchema,verifyEmailSchema,
     loginSchema,forgotPasswordSchema,
     resetPasswordSchema
-} from "../schemas/auth.schemas"
-import { updateUserSchema } from "../schemas/userschema";
+} from "../../schemas/auth.schemas"
+import { updateUserSchema } from "../../schemas/userschema";
 export const UserRouter=[
     {
         method:"post",

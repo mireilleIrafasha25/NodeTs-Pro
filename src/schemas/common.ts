@@ -37,3 +37,8 @@ export const nameSchema = z
   .min(2, "Name must be at least 2 characters")
   .max(100, "Name must be less than 100 characters")
   .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces");
+
+  export const descriptionSchema=z
+  .string()
+  .min(10,"description must be at least 10 characters")
+  .max(100, "description must be less than 100 characters")
