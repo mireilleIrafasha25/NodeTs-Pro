@@ -43,7 +43,7 @@ export const AddBlog = asyncWrapper(async (
     }
 
     const blog = blogRepository.create({
-      name: req.body.title,
+      name: req.body.name,
       description: req.body.description,
       image: result.url,
     });
@@ -53,7 +53,11 @@ export const AddBlog = asyncWrapper(async (
     res.status(201).json({
         success:true,
          message: "Blog created successfully",
-          data: {savedBlog }});
+          data: {
+            image:savedBlog.image,
+            name:savedBlog.name,
+            description:savedBlog.description
+          }});
 
 }) as RequestHandler;
 

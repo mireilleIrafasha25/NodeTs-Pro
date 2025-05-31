@@ -4,6 +4,7 @@ import {
   CreateDateColumn, UpdateDateColumn, Unique,OneToMany
 } from 'typeorm';
 import { Token } from './Token';
+import {Blog} from "./blog"
 @Entity()
 @Unique(['email']) 
 export class User {
@@ -39,4 +40,7 @@ export class User {
 
  @OneToMany(() => Token, (token) => token.user, { cascade: true })
   tokens!: Token[];
+
+   @OneToMany(() => Blog, (blog) => blog.users, { cascade: true })
+  blogs!: Token[];
 }

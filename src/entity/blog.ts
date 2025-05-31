@@ -2,7 +2,7 @@ import {
 Entity,
 Column,
 PrimaryGeneratedColumn,
-OneToMany,
+ManyToOne,
 CreateDateColumn,
 UpdateDateColumn,
 Unique,
@@ -29,6 +29,6 @@ export class Blog{
     @UpdateDateColumn()
     updatedAt!:Date;
 
-    @OneToMany(()=>User,(user)=>user.id,{cascade:true})
+    @ManyToOne(()=>User,(user)=>user.id,{ onDelete: "CASCADE" })
     users!:User[];
 }

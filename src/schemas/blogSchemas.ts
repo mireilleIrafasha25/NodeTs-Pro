@@ -4,7 +4,7 @@ import {z} from "zod"
 export const addBlogSchema=z.object({
     body:z.object({
         name:nameSchema,
-        descriptionSchema:descriptionSchema,
+        description:descriptionSchema,
     })
 });
 
