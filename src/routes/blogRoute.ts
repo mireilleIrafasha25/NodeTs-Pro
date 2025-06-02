@@ -10,5 +10,5 @@ route.post('/addBlog',authenticateToken,authorize("admin"),upload.single('image'
 route.get("/listBlog",GetBlog)
 route.get("/getBlogById/:id",GetBlogById)
 route.put("/updateBlog/:id",UpdateBlog)
-route.delete("/deleteBlog/:id",DeleteBlog)
+route.delete("/deleteBlog/:id",authenticateToken,authorize("admin"),DeleteBlog)
 export default route;

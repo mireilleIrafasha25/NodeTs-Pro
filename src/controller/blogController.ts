@@ -114,7 +114,7 @@ export const UpdateBlog = async (req: Request, res: Response, next: NextFunction
       imageUrl = result.url;
     }
 
-    blog.name = req.body.title || blog.name;
+    blog.name = req.body.name || blog.name;
     blog.description = req.body.description || blog.description;
     blog.image = imageUrl;
 

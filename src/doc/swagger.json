@@ -17,94 +17,58 @@
     "description": "Find more info here"
   },
   "basePath": "/",
-  "servers": [
-    {
-      "url": "http://localhost:4000",
-      "description": "Local server"
-    },
-    {
-      "url": "..",
-      "description": "production server"
-    }
-  ],
-  "schemes": [
-    "https",
-    "http"
-  ],
+  "schemes": ["https", "http"],
   "tags": [
     {
       "name": "User Management System",
-      "description": "Operation pretaining to User Management"
+      "description": "Operation pertaining to User Management"
     }
   ],
   "paths": {
-    "/user/Test":{
-      "get":{
-        "tags":["Users"],
+    "/user/Test": {
+      "get": {
+        "tags": ["Users"],
         "summary": "Test",
         "description": "Test",
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           }
         }
       }
     },
-    "/user/signup": {
+    "/signup": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Create a new user",
         "description": "Create a new user",
         "parameters": [
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/User"
+              "$ref": "#/definitions/User"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
         "responses": {
           "201": {
             "description": "User created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
-            "description": "Bad request -Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
                 }
               }
             }
@@ -114,52 +78,33 @@
     },
     "/user/signin": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Sign in a user",
         "description": "Sign in a user",
         "parameters": [
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Login"
+              "$ref": "#/definitions/Login"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "User logged in successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
-            "description": "Bad request -Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
                 }
               }
             }
@@ -169,22 +114,16 @@
     },
     "/user/listAll": {
       "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Get all user",
-        "description": "Returns all the userzs",
+        "tags": ["Users"],
+        "summary": "Get all users",
+        "description": "Returns all the users",
         "responses": {
           "200": {
             "description": "All the users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/User"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
               }
             }
           }
@@ -193,52 +132,33 @@
     },
     "/user/verify": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Verify a user",
         "description": "Verify a user",
         "parameters": [
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Verify"
+              "$ref": "#/definitions/Verify"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Otp was verified",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+            "description": "OTP was verified",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
-            "description": "Bad request -Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
                 }
               }
             }
@@ -248,52 +168,33 @@
     },
     "/user/forgotpassword": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Forgot password",
         "description": "Forgot password",
         "parameters": [
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/ForgotPassword"
+              "$ref": "#/definitions/ForgotPassword"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Forgot password was successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+            "description": "Forgot password was successful",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
-            "description": "Bad request -Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
                 }
               }
             }
@@ -301,237 +202,126 @@
         }
       }
     },
-    "/user/resetPassword/:token/:id": {
+    "/user/resetPassword/{token}/{id}": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Reset password",
         "description": "Reset password",
         "parameters": [
-            {
-            "name": "body",
-            "in": "body",
+          {
+            "name": "token",
+            "in": "path",
             "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ResetPassword"
-            }
+            "type": "string"
           },
           {
-             "name": "id",
-             "in": "path",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "token",
-                      "in": "path",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPassword"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Password was reset successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
-            "description": "Bad request -Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
                 }
               }
             }
           }
         }
-  }
-},
-              
-  },
-
-  "components": {
-    "schemas": {
-      "User": {
-        "type": "object",
-        "properties": {
-          "Firstname": {
-            "type": "string",
-            "description": "name of the User"
-          },
-          "Lastname": {
-            "type": "string",
-            "description": "name of the User"
-          },
-          "email": {
-            "type": "string",
-            "description": "email of the User"
-          },
-          "password": {
-            "type": "string",
-            "description": "password of the User"
-          },
-          "confirmPassword": {
-            "type": "string",
-            "description": "confirmpassword of the User"
-          },
-          "role": {
-            "type": "string",
-            "enum":["admin","user"],
-            "description": "role of the User",
-            "default": "user"
-          }
-        },
-        "required": [
-          "Firstname",
-          "Lastname",
-          "password",
-          "email",
-          "role",
-          "confirmpassword"
-        ]
-      },
-      "Login":{
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "email of the User"
-          },
-          "password": {
-            "type": "string",
-            "description": "password of the User"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "Verify":{
-        "type":"object",
-        "properties":{
-          "otp":{
-            "type":"number",
-            "description":"otp sending to email"
-          },
-          "email":{
-            "type":"string",
-            "description":"email of the User"
-          }
-        },
-        "required":[
-          "email",
-          "otp"
-        ]
-      },
-      "ForgotPassword":{
-        "type":"object",
-        "properties":{
-          "email":{
-            "type":"string",
-            "description":"email of the User"
-          }
-        },
-        "required":[
-          "email"
-        ]
-      },
-      "ResetPassword":{
-        "type":"object",
-        "properties":{
-          "email":{
-            "type": "string",
-            "description": "email of the User"
-          },
-          "password":{
-            "type": "string",
-            "description": "password of the User"
-          }
-        },
-        "required":[
-          "email",
-          "password"
-        ]
-      },
-      "Contact":{
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "name of the contact"
-          },
-          "email": {
-            "type": "string",
-            "description": "email of the contact"
-          },
-          "message1": {
-            "type": "string",
-            "description": "phoneNumber of the contact"
-          }
-        },
-        "required":["email","contact","message"]
-      },
-      "Product":{
-        "type":"object",
-        "properties":{
-          "name":{
-            "type":"string",
-            "description":"name of the product"
-          },
-          "Max_price":{
-            "type":"number",
-            "description":"Maximum price of the product"
-          },
-          "Min_price":{
-            "type":"number",
-            "description":"Minimum price of the product"
-          },
-          "description":{
-            "type":"string",
-            "description":"description of the product"
-          },
-          "category":{
-            "type":"string",
-            "description":"category of the product"
-          },
-          "rating":{
-            "type":"number",
-            "description":"rating of the product"
-          },
-          "colors":{
-            "type":"string",
-            "description":"colors of the product"
-          }
-        }
       }
-      
-     
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "Firstname": {
+          "type": "string"
+        },
+        "Lastname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirmPassword": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "user"],
+          "default": "user"
+        }
+      },
+      "required": ["Firstname", "Lastname", "email", "password", "confirmPassword", "role"]
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "password"]
+    },
+    "Verify": {
+      "type": "object",
+      "properties": {
+        "otp": {
+          "type": "number"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "required": ["otp", "email"]
+    },
+    "ForgotPassword": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      },
+      "required": ["email"]
+    },
+    "ResetPassword": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "password"]
     }
   }
 }
