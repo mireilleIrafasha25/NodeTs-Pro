@@ -165,9 +165,7 @@ export const ResetPassword = asyncWrapper(async (
     const errors = validationResult(req);
     if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
-    const { password, confirmPassword } = req.body;
-         if (password !== confirmPassword)
-        return next(new BadRequestError('Passwords do not match'));
+    const { password} = req.body;
 
     let decoded;
     try {

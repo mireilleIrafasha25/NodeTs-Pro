@@ -22,6 +22,13 @@ const data = await fs.readFile(swaggerPath, 'utf-8');
     return null; // Prevents app crash
   }
 }
+
+//Middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Routes
+app.use('/', routes);
 const startDocumentation=async()=>
 {
   try{
@@ -40,12 +47,6 @@ const startDocumentation=async()=>
   }
 }
 startDocumentation()
-//Middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Routes
-app.use('/', routes);
 // Error handling middleware
 app.use(errorHandler);
 
