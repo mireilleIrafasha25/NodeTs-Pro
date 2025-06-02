@@ -24,6 +24,13 @@
       "description": "Operation pertaining to User Management"
     }
   ],
+    "securityDefinitions": {
+  "bearerAuth": {
+    "type": "apiKey",
+    "name": "Authorization",
+    "in": "header"
+  }
+},
   "paths": {
     "/user/Test": {
       "get": {
@@ -367,16 +374,62 @@
           }
         }
       }
+    },
+    "/blog/addBlog":{
+      "post": {
+        "tags": [
+          "Blogs"
+        ],
+        "summary": "Add a new blog",
+        "description": "add a new blog with  the provided details",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token (format: Bearer <your_token>)"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type":"string"
+            
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type":"file"
+           
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "required": true,
+            "type":"string"
+           
+          }
+          
+        ],
+        "responses": {
+          "201": {
+            "description": "Blog added successfully"
+           
+          },
+          "401": {
+            "description": "Unauthorized - No Token Provided"
+          }
+        }
+      }
     }
   },
   "definitions": {
     "User": {
       "type": "object",
       "properties": {
-        "Firstname": {
-          "type": "string"
-        },
-        "Lastname": {
+        "name": {
           "type": "string"
         },
         "email": {
@@ -394,7 +447,21 @@
           "default": "user"
         }
       },
-      "required": ["Firstname", "Lastname", "email", "password", "confirmPassword", "role"]
+      "required": ["name", "email", "password", "confirmPassword", "role"]
+    },
+    "Blog":{
+      "type":"object",
+      "properties":{
+        "name":{
+          "type":"string"
+        },
+        "description":{
+          "type":"string"
+        },
+        "image":{
+          "type":"string"
+        }
+      }
     },
     "Login": {
       "type": "object",

@@ -11,6 +11,8 @@ import {
   resetPasswordSchema 
 } from '../schemas/auth.schemas';
 
+import {authenticateToken,authorize} from "../middleware/authenthicateToken"
+
 const router: Router = express.Router();
 router.get("/Test",test)
 router.post('/signup', validate(signupSchema), SignUp);
@@ -20,6 +22,6 @@ router.post('/forgotPassword', validate(forgotPasswordSchema), ForgotPassword);
 router.post('/resetPassword/:token/:id', validate(resetPasswordSchema), ResetPassword);
 router.get('/listAll',getAllusers);
 router.put("/updateUser/:id",updateUser);
-router.delete("/deleteUser/:id",deleteUser);
+router.delete("/deleteUser/:id",authenticateToken,authorize("admin"),deleteUser);
 router.get("/findUserById/:id",findUserById);
 export default router;
