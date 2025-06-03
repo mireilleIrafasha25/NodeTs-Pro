@@ -342,7 +342,7 @@
       }
     },
         "/user/findUserById/{id}": {
-      "post": {
+      "get": {
         "tags": ["Users"],
         "summary": "Reset password",
         "description": "Reset password",
@@ -420,6 +420,147 @@
           },
           "401": {
             "description": "Unauthorized - No Token Provided"
+          }
+        }
+      }
+    },
+    "/blog/listBlog":{
+      "get": {
+        "tags": [
+          "Blogs"
+        ],
+        "summary": "List All blogs",
+        "description": "display all blogs from database",
+        "responses": {
+          "200": {
+            "description": "All Blogs displayed" 
+          }
+        }
+      }
+    },
+        "/blog/getBlogById/{id}": {
+      "get": {
+        "tags": ["Blogs"],
+        "summary": "Get Blog by ID",
+        "description": " GET blog using its id",
+        "parameters": [
+          
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "blog was retrieved successfully",
+            "schema": {
+              "$ref": "#/definitions/Blog"
+            }
+          },
+          "400": {
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blog/updateBlog/{id}":{
+      "put": {
+        "tags": [
+          "Blogs"
+        ],
+        "summary": "update blog",
+        "description": "update blog with  the provided details",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token (format: Bearer <your_token>)"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": false,
+            "type":"string"
+            
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": false,
+            "type":"file"
+           
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "required": false,
+            "type":"string"
+           
+          }
+          
+        ],
+        "responses": {
+          "200": {
+            "description": "Blog updated successfully"
+           
+          },
+          "401": {
+            "description": "Unauthorized - No Token Provided"
+          }
+        }
+      }
+    },
+
+        "/blog/deleteBlog/{id}": {
+      "delete": {
+        "tags": ["Blogs"],
+        "summary": "delete blog",
+        "description": "only admin allowed to delete blog from database",
+        "parameters": [
+          
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name":"Authorization",
+            "in":"header",
+            "required":true,
+            "type":"string",
+            "description":"Bearer token (format: Bearer <your_token>)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "blog was deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/Blog"
+            }
+          },
+          "400": {
+            "description": "Bad request - Validation error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
