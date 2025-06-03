@@ -29,6 +29,9 @@ export class Blog{
     @UpdateDateColumn()
     updatedAt!:Date;
 
+    @Column()
+    userId!:string;
+
     @ManyToOne(()=>User,(user)=>user.id,{ onDelete: "CASCADE" })
     users!:User[];
 }

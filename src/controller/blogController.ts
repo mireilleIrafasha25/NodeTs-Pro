@@ -26,7 +26,6 @@ export const AddBlog = asyncWrapper(async (
     if (!errors.isEmpty()) {
       return next(new BadRequestError(errors.array()[0].msg));
     }
-
     if (!req.file) {
       return next(new BadRequestError( "Image file is required"));
     }
