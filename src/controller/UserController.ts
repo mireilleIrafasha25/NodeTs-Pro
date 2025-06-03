@@ -59,7 +59,7 @@ await sendEmail({
 });
    
 // generate token
- const token = jwt.sign({ id: savedUser.id, role: savedUser.role, email: savedUser.email }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
+ const token = jwt.sign({ id: savedUser.id, role: savedUser.role, email: savedUser.email }, process.env.JWT_SECRET_KEY!, { expiresIn: '1s' });
 
     res.status(201).json({ 
         success:true,
@@ -90,7 +90,7 @@ export const Validateopt = asyncWrapper(async (req: Request, res: Response, next
     user.verified = true;
     await userRepo.save(user);
 
-    const token = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
+    // const token = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
 
     res.status(200).json({ message: 'User account verified!', });
 });
@@ -109,7 +109,7 @@ export const SignIn = asyncWrapper(async (
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return next(new BadRequestError('Invalid password'));
 
-    const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1s' });
     res.status(200).json({ success:true,message: 'Login successful',     
         data: {
         user:{
