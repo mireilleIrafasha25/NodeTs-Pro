@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler, } from 'express';
 import { ILike } from 'typeorm';
-import { validationResult } from 'express-validator';
+// import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -25,10 +25,8 @@ export const SignUp = asyncWrapper(async (
     req: AuthenticatedRequest&SignupInput, 
     res: Response<ApiResponse>,
      next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
-
-    if (req.body.password !== req.body.confirmPassword) return next(new BadRequestError('Passwords do not match'));
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
     const userRepo = AppDataSource.getRepository(User);
     //checking if email already exist
@@ -78,8 +76,8 @@ await sendEmail({
 
  // verify email
 export const Validateopt = asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
     const userRepo = AppDataSource.getRepository(User);
     const user = await userRepo.findOneBy({ otp: req.body.otp });
@@ -99,8 +97,8 @@ export const SignIn = asyncWrapper(async (
     req: AuthenticatedRequest&LoginInput,
      res: Response<ApiResponse>, 
      next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
     const userRepo = AppDataSource.getRepository(User);
     const user = await userRepo.findOneBy({ email: req.body.email });
@@ -136,8 +134,8 @@ export const ForgotPassword = asyncWrapper(async (
     req: AuthenticatedRequest&ForgotPasswordInput,
      res: Response<ApiResponse>, 
       next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
     const userRepo = AppDataSource.getRepository(User);
     const user = await userRepo.findOneBy({ email: req.body.email });
@@ -147,11 +145,22 @@ export const ForgotPassword = asyncWrapper(async (
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '15m' });
 
     await tokenRepo.save(tokenRepo.create({ token, user, expirationDate: new Date(Date.now() + 5 * 60 * 1000) }));
-    const resetLink = `http://localhost:4000/user/resetPassword/${token}/${user.id}`;
-
-    await sendEmail({recipient:user.email, 
-        subject:'Reset your password', 
-        body:`Click the link: ${resetLink}`});
+    const resetLink = `nutriserve://resetPassword?token=${token}&id=${user.id}`;
+   const htmlContent = `
+  <div style="font-family: sans-serif; padding: 20px;">
+    <h2>Reset Your Password</h2>
+    <p>Click the button below to reset your password:</p>
+    <a href="${resetLink}" style="background-color: #52A33C; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+      Reset Password
+    </a>
+    <p>If you didn't request this, please ignore this email.</p>
+  </div>
+`;
+  await sendEmail({
+  recipient: user.email,
+  subject: 'Reset your password',
+  body:htmlContent,
+});
     res.status(200).json({ success:true,
         message: 'Reset password link sent to your email' });
 });
@@ -162,8 +171,8 @@ export const ResetPassword = asyncWrapper(async (
       next: NextFunction) => 
         
         {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
     const { password} = req.body;
 

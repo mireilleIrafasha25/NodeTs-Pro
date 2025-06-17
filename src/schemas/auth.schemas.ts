@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { emailSchema, passwordSchema, nameSchema,ConfirmpasswordSchema } from './common';
+import { emailSchema, passwordSchema, nameSchema} from './common';
 
 export const signupSchema = z.object({
   body: z.object({
     name: nameSchema,
     email: emailSchema,
     password: passwordSchema,
-    confirmPassword:ConfirmpasswordSchema,
+    // confirmPassword:ConfirmpasswordSchema,
     role: z.enum(['user', 'admin']).default('user')
   })
 });
@@ -31,7 +31,7 @@ export const resetPasswordSchema = z.object({
   }),
   body: z.object({
     password: passwordSchema,
-    confirmPassword:ConfirmpasswordSchema
+    // confirmPassword:ConfirmpasswordSchema
   })
 });
 

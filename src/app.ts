@@ -7,6 +7,7 @@ import {errorHandler} from "./middleware/errorhandler"
 import swaggerUi from "swagger-ui-express";
 import fs from "fs/promises"
 import path from 'path';
+import cors from "cors"
 dotenv.config();
 
 const app: Express = express();
@@ -22,7 +23,7 @@ const data = await fs.readFile(swaggerPath, 'utf-8');
     return null; // Prevents app crash
   }
 }
-
+app.use(cors()); // Enable CORS for all origins
 //Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));

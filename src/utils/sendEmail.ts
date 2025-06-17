@@ -30,7 +30,8 @@ export const sendEmail = async ({ recipient, subject, body }: SendEmailParams): 
     from: emailUser,
     to: recipient,
     subject,
-    text: body,
+    text: body,    // fallback for plain-text email clients
+    html: body,      // now enables HTML formatting
   };
 
   try {

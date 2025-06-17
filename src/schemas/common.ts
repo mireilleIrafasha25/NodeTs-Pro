@@ -24,14 +24,14 @@ export const passwordSchema = z
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
     "Password must contain at least one lowercase letter, one uppercase letter, and one number"
   );
-export const ConfirmpasswordSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters")
-  .max(255, "Password must be less than 255 characters")
-  .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-    "Password must contain at least one lowercase letter, one uppercase letter, and one number"
-  );
+// export const ConfirmpasswordSchema = z
+//   .string()
+//   .min(8, "Password must be at least 8 characters")
+//   .max(255, "Password must be less than 255 characters")
+//   .regex(
+//     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+//     "Password must contain at least one lowercase letter, one uppercase letter, and one number"
+//   );
 export const nameSchema = z
   .string()
   .min(2, "Name must be at least 2 characters")
