@@ -5,7 +5,15 @@ dotenv.config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+    baseURL: 'https://openrouter.ai/api/v1', // ✅ only if you're using OpenRouter
+  defaultHeaders: {
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    'HTTP-Referer': 'http://localhost:3000',
+    'X-Title': 'My OpenRouter App',
+  },
+  timeout: 30000,
+}
+);
 
 export const generateMealPlanFromAI = async (prompt: string): Promise<string> => {
   try {
