@@ -11,7 +11,7 @@ import cors from "cors"
 dotenv.config();
 
 const app: Express = express();
-const PORT=process.env.PORT;
+const PORT=Number(process.env.PORT);
 
 async function loadDocumentation() {
   try {
@@ -58,9 +58,10 @@ const startServer = async () => {
       await InitializeDatabase();
       
       // Start Express server
-      app.listen(PORT, () => {
-        console.log(` Server running on http://127.0.0.1:${PORT}`);
-      });
+     app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
+});
+
     } catch (error) {
       console.error('Failed to start server:', error);
       process.exit(1);

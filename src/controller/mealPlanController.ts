@@ -43,7 +43,9 @@ export const generateMealPlan = async (
     `;
 
     const mealPlan = await generateMealPlanFromAI(prompt);
-
+      //  save to DB
+      userInfo.mealPlan = mealPlan;
+      await userInfoRepo.save(userInfo);
     return res.status(200).json({
       success: true,
       message: 'Meal plan generated successfully',

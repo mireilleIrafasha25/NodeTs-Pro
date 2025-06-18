@@ -52,6 +52,9 @@ export class UserInfo {
 @Column("simple-array", { nullable: true })
 dietPreferences?: string[]; // e.g., ['vegetarian', 'gluten-free']
 
+@Column({ type: 'jsonb', nullable: true })
+mealPlan: any;
+
 @OneToOne(() => User, { onDelete: "CASCADE" })
 @JoinColumn()
 user!: User;

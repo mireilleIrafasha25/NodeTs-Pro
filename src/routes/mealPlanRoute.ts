@@ -4,6 +4,6 @@ import { authenticateToken } from '../middleware/authenthicateToken';
 
 const router = Router();
 
-router.get('/generate', authenticateToken, generateMealPlan);
+router.post('/generate', authenticateToken, generateMealPlan);
 
 export default router;
