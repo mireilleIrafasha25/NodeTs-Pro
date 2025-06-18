@@ -1,10 +1,12 @@
 
 import {
   Entity, PrimaryGeneratedColumn, Column,
-  CreateDateColumn, UpdateDateColumn, Unique,OneToMany
+  CreateDateColumn, UpdateDateColumn, Unique,OneToMany,OneToOne
 } from 'typeorm';
 import { Token } from './Token';
-import {Blog} from "./blog"
+import {Blog} from "./blog";
+import { UserInfo } from './userInfo';
+
 @Entity()
 @Unique(['email']) 
 export class User {
@@ -41,6 +43,9 @@ export class User {
  @OneToMany(() => Token, (token) => token.user, { cascade: true })
   tokens!: Token[];
 
-   @OneToMany(() => Blog, (blog) => blog.users, { cascade: true })
-  blogs!: Token[];
+  @OneToMany(() => Blog, (blog) => blog.users, { cascade: true })
+  blogs!: Blog[];
+  
+@OneToOne(() => UserInfo, (userInfo) => userInfo.user, {cascade: true})
+userInfo!: UserInfo;
 }

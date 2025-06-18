@@ -107,7 +107,7 @@ export const SignIn = asyncWrapper(async (
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return next(new BadRequestError('Invalid password'));
 
-    const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1s' });
+    const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET_KEY!, { expiresIn: '1h' });
     res.status(200).json({ success:true,message: 'Login successful',     
         data: {
         user:{
@@ -145,7 +145,7 @@ export const ForgotPassword = asyncWrapper(async (
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY!, { expiresIn: '15m' });
 
     await tokenRepo.save(tokenRepo.create({ token, user, expirationDate: new Date(Date.now() + 5 * 60 * 1000) }));
-    const resetLink = `nutriserve://resetPassword?token=${token}&id=${user.id}`;
+    const resetLink = `exp://192.168.1.94:8081/resetPassword?token=${token}&id=${user.id}`;
    const htmlContent = `
   <div style="font-family: sans-serif; padding: 20px;">
     <h2>Reset Your Password</h2>
@@ -234,7 +234,6 @@ export const deleteUser = async (req: Request, res: Response,next:NextFunction) 
 
     if (!user) return res.status(404).json({ message: 'User not found' });
     await userRepo.remove(user);
-
     res.status(200).json({ message: 'User deleted successfully' });}
     catch(err)
     {
