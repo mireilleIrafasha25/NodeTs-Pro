@@ -18,15 +18,25 @@ export const generateMealPlan = async (
 
     const userInfoRepo = AppDataSource.getRepository(UserInfo);
     const userInfo = await userInfoRepo.findOne({
-  where: { user:{ id:req.user?.id} },
-  relations:["user"] //  Must include this!
-});
+      where: { user: { id: req.user?.id } },
+      relations: ['user']
+    });
 
     if (!userInfo) {
       return res.status(404).json({ success: false, message: 'User info not found' });
     }
 
-    // Construct the prompt using user info
+    // ✅ If already has a meal plan, return it as formatted
+    if (userInfo.mealPlan && userInfo.mealPlan.length > 0) {
+      const formattedPlan = formatMealPlanByDay(userInfo.mealPlan);
+      return res.status(200).json({
+        success: true,
+        message: 'Meal plan retrieved from database',
+        data: { mealPlan: formattedPlan }
+      });
+    }
+
+    // 🔄 Otherwise, generate a new plan
     const prompt = `
 Generate a 7-day meal plan for the following person:
 - Age: ${userInfo.age}
@@ -48,23 +58,20 @@ Return the response as a JSON array of 7 objects. Each object should be structur
   "lunch": "...",
   "dinner": "..."
 }
-  Only return the JSON array.
+Only return the JSON array.
 `;
-
 
     const mealPlan = await generateMealPlanFromAI(prompt);
     console.log('AI response:', mealPlan);
-      //  save to DB
-      userInfo.mealPlan = mealPlan;
-      await userInfoRepo.save(userInfo);
-     //format for client response 
-     const formattedPlan=formatMealPlanByDay(mealPlan)
 
+    userInfo.mealPlan = mealPlan;
+    await userInfoRepo.save(userInfo);
+
+    const formattedPlan = formatMealPlanByDay(mealPlan);
     return res.status(200).json({
       success: true,
-      message: 'Meal plan generated successfully',
-      data: {
-         mealPlan:formattedPlan },
+      message: 'Meal plan generated and saved successfully',
+      data: { mealPlan: formattedPlan }
     });
 
   } catch (error) {
@@ -75,8 +82,6 @@ Return the response as a JSON array of 7 objects. Each object should be structur
     });
   }
 };
-
-
 
 
 

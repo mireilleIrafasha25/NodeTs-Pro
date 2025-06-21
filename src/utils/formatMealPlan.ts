@@ -1,28 +1,19 @@
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 type MealDay = {
-  day: string;
+  day: string; 
   breakfast: string;
   snack: string | string[];
   lunch: string;
   dinner: string;
 };
 
-export function formatMealPlanByDay(raw: string | MealDay[], today: Date = new Date()) {
+export function formatMealPlanByDay(raw: string | MealDay[]) {
   let parsedPlan: MealDay[];
+
   try {
-    // Parse string if necessary
-    if (typeof raw === 'string') {
-      parsedPlan = JSON.parse(raw);
-    } else {
-      parsedPlan = raw;
-    }
+    parsedPlan = typeof raw === 'string' ? JSON.parse(raw) : raw;
 
-    // Format result: attach actual weekday name based on today
-    const todayIndex = today.getDay();
-
-    const result = parsedPlan.map((entry, i) => ({
-      dayName: DAYS[(todayIndex + i) % 7],
+    const result = parsedPlan.map((entry) => ({
+      dayName: entry.day, 
       meals: {
         breakfast: entry.breakfast,
         snack: Array.isArray(entry.snack) ? entry.snack : [entry.snack],
