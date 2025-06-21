@@ -34,8 +34,8 @@ export class UserInfo {
   @Column({ nullable: true })
   haveBreastMilk?: boolean;
 
-  @Column()
-  typeOfJob!: string; // e.g., 'sedentary', 'active'
+  // @Column()
+  // typeOfJob!: string; // e.g., 'sedentary', 'active'
 
   @Column("simple-array", { nullable: true })
   allergies?: string[]; // e.g., ['milk', 'meat']
@@ -49,8 +49,8 @@ export class UserInfo {
   @Column({ type: 'enum', enum: ActivityLevel })
  activityLevel!: ActivityLevel;
 
-@Column("simple-array", { nullable: true })
-dietPreferences?: string[]; // e.g., ['vegetarian', 'gluten-free']
+// @Column("simple-array", { nullable: true })
+// dietPreferences?: string[]; // e.g., ['vegetarian', 'gluten-free']
 
 @Column({ type: 'jsonb', nullable: true })
 mealPlan: any;

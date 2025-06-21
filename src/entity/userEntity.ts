@@ -6,7 +6,7 @@ import {
 import { Token } from './Token';
 import {Blog} from "./blog";
 import { UserInfo } from './userInfo';
-
+import { Order } from './OrderEntity';
 @Entity()
 @Unique(['email']) 
 export class User {
@@ -48,4 +48,8 @@ export class User {
   
 @OneToOne(() => UserInfo, (userInfo) => userInfo.user, {cascade: true})
 userInfo!: UserInfo;
+
+@OneToMany(() => Order, (order) => order.users,{cascade:true})
+orders!: Order[];
+
 }

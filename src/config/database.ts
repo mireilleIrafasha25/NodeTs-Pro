@@ -3,6 +3,8 @@ import { User } from "../entity/userEntity";
 import { Token } from "../entity/Token";
 import {Blog} from "../entity/blog";
 import { UserInfo } from "../entity/userInfo";
+import { Order } from "../entity/OrderEntity";
+import { Meal } from "../entity/mealEntity";
 import * as dotenv from "dotenv";
 dotenv.config();
 export const AppDataSource=new DataSource(
@@ -15,7 +17,7 @@ host:"localhost",
  database: "User_db",
  synchronize: true,
  logging: ["error"],
- entities: [User,Token,Blog,UserInfo],
+ entities: [User,Token,Blog,UserInfo,Order,Meal],
  migrations: [],
  subscribers: [],
 })

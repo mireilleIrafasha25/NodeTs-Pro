@@ -1,4 +1,11 @@
-import { Entity,Column,PrimaryGeneratedColumn,CreateDateColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+
+export enum MealType {
+  BREAKFAST = 'breakfast',
+  LUNCH = 'lunch',
+  DINNER = 'dinner',
+  SNACK='snack'
+}
 
 @Entity()
 export class Meal {
@@ -15,13 +22,19 @@ export class Meal {
   price!: number;
 
   @Column()
-  photo!: string; // URL or path to meal image
+  photo!: string;
 
   @Column("simple-array")
   ingredients!: string[];
 
   @Column()
   preparationTime!: string;
+
+  @Column({
+    type: 'enum',
+    enum: MealType
+  })
+  mealType!: MealType;
 
   @CreateDateColumn()
   createdAt!: Date;

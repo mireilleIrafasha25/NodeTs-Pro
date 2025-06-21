@@ -101,8 +101,12 @@ export const SignIn = asyncWrapper(async (
     // if (!errors.isEmpty()) return next(new BadRequestError(errors.array()[0].msg));
 
     const userRepo = AppDataSource.getRepository(User);
-    const user = await userRepo.findOneBy({ email: req.body.email });
-    if (!user || !user.verified) return next(new BadRequestError('Invalid credentials or account not verified'));
+    const user = await userRepo.findOne({
+     where: { email: req.body.email },
+     relations: ['userInfo'], //This loads the related userInfo including mealPlan
+         });
+
+    if (!user) return next(new BadRequestError('Invalid credentials or account not verified'));
 
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return next(new BadRequestError('Invalid password'));
@@ -114,7 +118,11 @@ export const SignIn = asyncWrapper(async (
             id:user.id,
             name:user.name,
             email:user.email,
-            role:user.role
+            role:user.role,
+            userInfo: user.userInfo ? {
+            id: user.userInfo.id,
+            mealPlan: user.userInfo.mealPlan || null
+            } : null
         },
         token:token
     }});

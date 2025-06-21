@@ -5,27 +5,28 @@ import { UserInfo } from "../entity/userInfo";
 import { User } from "../entity/userEntity";
 import { AuthenticatedRequest,ApiResponse } from "../types/common.types";
 import asyncWrapper from "../middleware/async";
-import { userInfo } from "node:os";
 import { size } from "zod/v4";
+import { fa } from "zod/v4/locales";
+import { NotFoundError } from "../error/notFoundError";
+const userInfoRepo = AppDataSource.getRepository(UserInfo);
 
 export const saveUserInfo = async(
      req: AuthenticatedRequest,
      res: Response<ApiResponse>,
     next:NextFunction) => {
-  const { weight, height, age, gender, goal,
-    isPregnant,pregnancyTrimester,isBreastFeeding,babyAgeInMonths,
-    healthrelatedDisease,haveBreastMilk,typeOfJob,allergies,activityLevel} = req.body;
+  const { weight, height, age, gender, goal,babyAgeInMonths,
+    isPregnant,pregnancyTrimester,isBreastFeeding,
+    healthrelatedDisease,haveBreastMilk,allergies,activityLevel} = req.body;
   const userId = req.user?.id;
   const userRepo = AppDataSource.getRepository(User);
   const user = await userRepo.findOneBy({ id: userId });
   if (!user) return res.status(404).json({ success: false, message: "User not found" });
-     if(!isPregnant && gender==='male')
-     {
-        pregnancyTrimester===0;
-        babyAgeInMonths===0;
-        isBreastFeeding===false
-     }
-  const userInfoRepo = AppDataSource.getRepository(UserInfo);
+    //  if(!isPregnant && gender==='male')
+    //  {
+    //     pregnancyTrimester===0;
+    //     isBreastFeeding===false
+    //  }
+  
   const userInfo = userInfoRepo.create(
     {
          weight,
@@ -36,12 +37,11 @@ export const saveUserInfo = async(
         isPregnant,
         pregnancyTrimester,
         isBreastFeeding,
-        babyAgeInMonths,
         healthrelatedDisease,
         haveBreastMilk,
-        typeOfJob,
         allergies,
         activityLevel,
+        babyAgeInMonths,
         user
     }
 );
@@ -85,4 +85,23 @@ export const getAllUsersInformation=asyncWrapper(
       }
     })
       
+})
+
+export const UpdateUserInfo =asyncWrapper(async(req:AuthenticatedRequest,
+    res:Response<ApiResponse>,
+    next:NextFunction
+  )=>
+{
+ const id=req.params.id;
+ const updateduserInfo=req.body;
+ const userInfo=await userInfoRepo.findOneBy({id});
+ if(!userInfo) return next(new NotFoundError("User Information not found"))
+ const updateUserInfo=userInfoRepo.merge(userInfo,updateduserInfo);
+ await userInfoRepo.save(updateUserInfo)
+ res.status(200).json({
+  success:true,
+  message:"User information updated successfully",
+  data:updateUserInfo
+})
+
 })

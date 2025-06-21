@@ -13,12 +13,6 @@ export class Order {
   @PrimaryGeneratedColumn()
   id!: number;
 
-//   @ManyToOne(() => User, user => user.orders)
-//   user!: User;
-
-  @ManyToOne(() => Meal)
-  meal!: Meal;
-
   @Column()
   deliveryTime!: string; // e.g., "12:30 PM"
 
@@ -33,4 +27,10 @@ export class Order {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  @ManyToOne(()=>User,(user)=>user.id,{ onDelete: "CASCADE" })
+  users!:User[];
+
+  @ManyToOne(() => Meal)
+  meal!: Meal;
 }
